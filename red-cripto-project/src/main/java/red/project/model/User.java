@@ -4,6 +4,8 @@
  */
 package red.project.model;
 
+import red.project.algorithms.SHA256;
+
 /**
  *
  * @author Matheus
@@ -14,8 +16,8 @@ public class User {
     
     private String password;
     
-    public User(String username, String password) {
-        this.username = username;
+    public User(String username, String password) throws Exception {
+        this.username = applyHashToUsername(username);
         this.password = password;
     }
     
@@ -27,12 +29,16 @@ public class User {
         return password;
     }
     
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(String username) throws Exception {
+        this.username = applyHashToUsername(username);
     }
     
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    public String applyHashToUsername(String username) throws Exception {
+        return SHA256.getHashValue(username);
     }
     
     @Override

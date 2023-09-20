@@ -29,7 +29,7 @@ public class SHA256 {
             hashValue = Hex.toHexString(JcaUtils.computeDigest("SHA-256", Strings.toByteArray(valueToHash)));
         }
         catch (NoSuchAlgorithmException | NoSuchProviderException ex) {
-            throw new Exception(ex.getMessage());
+            throw new Exception("Falha ao aplicar hash no nome de usuário: " + ex.getMessage());
         }
         return hashValue;
     }
