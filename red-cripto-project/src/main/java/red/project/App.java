@@ -21,8 +21,8 @@ public class App {
     
     public static void main(String[] args) {
         
-        //new LoginController();
-        
+        new LoginController();
+        /*
         // Nome de usuário gerando OK
         Scanner sc = new Scanner(System.in);
         System.out.print("Digite o nome de usuário: ");
@@ -34,7 +34,7 @@ public class App {
             Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-            
+           */ 
             /*
             byte[] myBytes;
             myBytes = usuario.getBytes();
