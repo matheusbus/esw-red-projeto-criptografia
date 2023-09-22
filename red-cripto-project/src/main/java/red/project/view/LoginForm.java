@@ -5,9 +5,14 @@
 package red.project.view;
 
 import com.formdev.flatlaf.intellijthemes.FlatArcDarkIJTheme;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import red.project.model.UserEncryptMode;
 
 /**
  *
@@ -49,7 +54,7 @@ public final class LoginForm extends BaseForm {
         btnLogin.addActionListener(action);
     }
     
-    public void addRegisterLabelClickAction(MouseListener event) {
+    public void addRegisterLabelClickAction(MouseAdapter event) {
         lblRegister.addMouseListener(event);
     }
     
@@ -61,9 +66,12 @@ public final class LoginForm extends BaseForm {
         lblUsername.addFocusListener(event);
     }
     
+    public void setUserEncryptModes(List<UserEncryptMode> modes) {
+        DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel(modes.toArray());
+        cbEncMode.setModel(defaultComboBoxModel);
+    }
     
     
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -82,6 +90,8 @@ public final class LoginForm extends BaseForm {
         btnLogin = new javax.swing.JButton();
         lblRegister = new javax.swing.JLabel();
         btnManagement = new javax.swing.JButton();
+        cbEncMode = new javax.swing.JComboBox<>();
+        lblPassword1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("CredentialCipher [Login]");
@@ -108,13 +118,17 @@ public final class LoginForm extends BaseForm {
         lblRegister.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblRegister.setForeground(new java.awt.Color(51, 153, 255));
         lblRegister.setText("Criar usuário");
-        lblRegister.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblRegisterMouseClicked(evt);
+        lblRegister.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        btnManagement.setText("G");
+        btnManagement.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManagementActionPerformed(evt);
             }
         });
 
-        btnManagement.setText("G");
+        lblPassword1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lblPassword1.setText("Encryption mode:");
 
         javax.swing.GroupLayout pnlPrincipalLayout = new javax.swing.GroupLayout(pnlPrincipal);
         pnlPrincipal.setLayout(pnlPrincipalLayout);
@@ -123,30 +137,41 @@ public final class LoginForm extends BaseForm {
             .addGroup(pnlPrincipalLayout.createSequentialGroup()
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                        .addGap(310, 310, 310)
+                        .addGap(147, 147, 147)
+                        .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(64, 64, 64)
                         .addComponent(btnManagement, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(lblRegister)
-                            .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblUsername)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlPrincipalLayout.createSequentialGroup()
-                                .addGap(29, 29, 29)
-                                .addComponent(lUsername))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlPrincipalLayout.createSequentialGroup()
-                                .addGap(28, 28, 28)
-                                .addComponent(lblPassword)))))
-                .addContainerGap(36, Short.MAX_VALUE))
+                        .addGap(98, 98, 98)
+                        .addComponent(lblUsername))
+                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                        .addGap(64, 64, 64)
+                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                                    .addGap(1, 1, 1)
+                                    .addComponent(lUsername))
+                                .addComponent(lblPassword)
+                                .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                                    .addGap(1, 1, 1)
+                                    .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                                    .addGap(1, 1, 1)
+                                    .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(cbEncMode, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lblPassword1))))))
+                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                        .addGap(223, 223, 223)
+                        .addComponent(lblRegister)))
+                .addContainerGap(71, Short.MAX_VALUE))
         );
         pnlPrincipalLayout.setVerticalGroup(
             pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                .addGap(46, 46, 46)
+                .addGap(40, 40, 40)
                 .addComponent(lblUsername)
-                .addGap(31, 31, 31)
+                .addGap(18, 18, 18)
                 .addComponent(lUsername)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -154,20 +179,26 @@ public final class LoginForm extends BaseForm {
                 .addComponent(lblPassword)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(lblPassword1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbEncMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnManagement)
+                    .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblRegister)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnManagement)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pnlPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -177,9 +208,9 @@ public final class LoginForm extends BaseForm {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void lblRegisterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRegisterMouseClicked
+    private void btnManagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManagementActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_lblRegisterMouseClicked
+    }//GEN-LAST:event_btnManagementActionPerformed
 
     /**
      * @param args the command line arguments
@@ -199,8 +230,10 @@ public final class LoginForm extends BaseForm {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnManagement;
+    private javax.swing.JComboBox<UserEncryptMode> cbEncMode;
     private javax.swing.JLabel lUsername;
     private javax.swing.JLabel lblPassword;
+    private javax.swing.JLabel lblPassword1;
     private javax.swing.JLabel lblRegister;
     private javax.swing.JLabel lblUsername;
     private javax.swing.JPanel pnlPrincipal;

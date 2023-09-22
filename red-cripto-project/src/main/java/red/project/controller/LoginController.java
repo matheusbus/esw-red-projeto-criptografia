@@ -5,6 +5,12 @@
 package red.project.controller;
 
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+import red.project.algorithms.AESCBC;
+import red.project.algorithms.SHA256;
+import red.project.model.UserEncryptMode;
 import red.project.view.LoginForm;
 
 /**
@@ -13,27 +19,29 @@ import red.project.view.LoginForm;
  */
 public final class LoginController extends BaseController {
     
-    private final LoginForm loginForm;
+    private static final List<UserEncryptMode> modes = new ArrayList<>();
+    private LoginForm form;
     
-    public LoginController() {
-        this.loginForm = new LoginForm();
-        initButtons();
-        showWindow();
+    static {
+        modes.add(UserEncryptMode
+                .getInstance(SHA256.getInstance(), AESCBC.getInstance(), "user-sha256_password-aescbc"));
     }
     
+    public LoginController() {
+        this.form = new LoginForm();
+        initButtons();
+        this.form.showWindow();
+    }
+    
+    @Override
     public void initButtons() {
-        loginForm.addLoginButtonAction((ae) -> {
-            loginAction();
-        });
-        
-        loginForm.addRegisterLabelClickAction(new MouseAdapter() {
-            public void mouseClicked() {
+        this.form.addRegisterLabelClickAction(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent me) {
                 registerAction();
             }
         });
-        loginForm.addManagementButtonAction((ae) -> {
-            managementAction();
-        });
+        this.form.setUserEncryptModes(modes);
     }
     
     public void loginAction() {
@@ -41,7 +49,9 @@ public final class LoginController extends BaseController {
     }
     
     public void registerAction() {
-        
+        RegisterController registerController = new RegisterController();
+        registerController.showWindow();
+        this.closeWindow();
     }
     
     public void managementAction() {
@@ -50,17 +60,17 @@ public final class LoginController extends BaseController {
 
     @Override
     public void showWindow() {
-        this.loginForm.showWindow();
+        this.form.showWindow();
     }
 
     @Override
     public void showMessage(String message, String title) {
-        this.loginForm.showMessage(message, title);
+        this.form.showMessage(message, title);
     }
 
     @Override
     public void closeWindow() {
-        this.loginForm.closeWindow();
+        this.form.closeWindow();
     }
     
 }

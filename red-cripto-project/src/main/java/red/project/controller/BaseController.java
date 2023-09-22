@@ -4,6 +4,8 @@
  */
 package red.project.controller;
 
+import red.project.view.BaseForm;
+
 /**
  *
  * @author matheus
@@ -18,4 +20,6 @@ public abstract class BaseController {
 
     public abstract void closeWindow();
 
+    
+    
 }
