@@ -17,15 +17,10 @@ public class UserEncryptMode {
     
     private Algorithm passwordEncryptMode;
     
-    private UserDao userDao;
-    
-    private String dirName;
-    
-    public static UserEncryptMode getInstance(Algorithm usernameEncryptMode, Algorithm passwordEncryptMode, String dirName) {
+    public static UserEncryptMode getInstance(Algorithm usernameEncryptMode, Algorithm passwordEncryptMode) {
         UserEncryptMode userEncryptMode = new UserEncryptMode();
         userEncryptMode.setUsernameEncryptMode(usernameEncryptMode);
         userEncryptMode.setPasswordEncryptMode(passwordEncryptMode);
-        userEncryptMode.setDirName(dirName);
         
         return userEncryptMode;
     }
@@ -45,22 +40,6 @@ public class UserEncryptMode {
     public void setPasswordEncryptMode(Algorithm passwordEncryptMode) {
         this.passwordEncryptMode = passwordEncryptMode;
     }
-
-    public String getDirName() {
-        return dirName;
-    }
-
-    public void setDirName(String dirName) {
-        this.dirName = dirName;
-    }
-
-    public UserDao getUserDao() {
-        return userDao;
-    }
-
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
     
     public User encryptUser(User user) throws Exception {
         user.setUsername(usernameEncryptMode.encrypt(user.getUsername()));
@@ -70,6 +49,6 @@ public class UserEncryptMode {
     
     @Override
     public String toString() {
-        return "USER = " + usernameEncryptMode.getClass().getSimpleName() + " | PASSWORD = " + passwordEncryptMode.getClass().getSimpleName();
+        return "USERNAME = " + usernameEncryptMode.getClass().getSimpleName() + " | PASSWORD = " + passwordEncryptMode.getClass().getSimpleName();
     }
 }

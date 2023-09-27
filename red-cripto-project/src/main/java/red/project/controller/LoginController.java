@@ -8,9 +8,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import red.project.algorithms.AESCBC;
+import red.project.algorithms.Algorithm;
+import red.project.algorithms.MD5;
 import red.project.algorithms.SHA256;
+import red.project.model.User;
 import red.project.model.UserEncryptMode;
+import red.project.model.dao.DaoBuilder;
+import red.project.model.dao.UserDao;
 import red.project.view.LoginForm;
 
 /**
@@ -19,12 +23,12 @@ import red.project.view.LoginForm;
  */
 public final class LoginController extends BaseController {
     
-    private static final List<UserEncryptMode> modes = new ArrayList<>();
+    private static final List<Algorithm> modes = new ArrayList<>();
     private LoginForm form;
     
     static {
-        modes.add(UserEncryptMode
-                .getInstance(SHA256.getInstance(), AESCBC.getInstance(), "user-sha256_password-aescbc"));
+        modes.add(MD5.getInstance());
+        modes.add(SHA256.getInstance());
     }
     
     public LoginController() {
@@ -41,11 +45,39 @@ public final class LoginController extends BaseController {
                 registerAction();
             }
         });
+        this.form.addLoginButtonAction((a) -> {
+            loginAction();
+        });
         this.form.setUserEncryptModes(modes);
     }
     
     public void loginAction() {
-        showMessage("Working", "Working");
+        UserEncryptMode userEncryptMode = getSelectedUserEncyptMode();
+        User userToSearch = new User(getUsernameInput(), getPasswordInput());
+        
+        try {
+            userToSearch = userEncryptMode.encryptUser(userToSearch);
+
+            UserDao dao = DaoBuilder.build(userEncryptMode);
+            User userSearched = dao.findFileByUser(userToSearch);
+            
+            if(userSearched == null) {
+                showMessage("Usuário ou senha inválidos.", "Aviso");
+            } else {
+                if((userToSearch.getUsername().equals(userSearched.getUsername()))
+                        && (userToSearch.getPassword().equals(userSearched.getPassword()))) {
+                    autentica();
+                }
+            }
+        }
+        catch (Exception ex) {
+            showMessage("Erro: " + ex.getMessage(), "Erro");
+        }
+        
+    }
+    
+    public void autentica() {
+        showMessage("Usuário autenticado com sucesso!", "Sucesso");
     }
     
     public void registerAction() {
@@ -73,4 +105,21 @@ public final class LoginController extends BaseController {
         this.form.closeWindow();
     }
     
+    public String getUsernameInput() {
+        return this.form.getUsernameInput();
+    }
+    
+    public String getPasswordInput() {
+        return this.form.getPasswordInput();
+    }
+    
+    public void clearInputs() {
+        this.form.clearAllInputs();
+    }
+    
+    public UserEncryptMode getSelectedUserEncyptMode() {
+        return UserEncryptMode.getInstance(
+                form.getUsernameEncModeSelectedItem(), 
+                form.getPasswordEncModeSelectedItem());
+    }
 }

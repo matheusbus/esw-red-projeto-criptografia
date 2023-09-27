@@ -8,11 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import red.project.algorithms.AESCBC;
+import red.project.algorithms.Algorithm;
 import red.project.algorithms.MD5;
 import red.project.algorithms.SHA256;
 import red.project.model.User;
 import red.project.model.UserEncryptMode;
+import red.project.model.dao.DaoBuilder;
+import red.project.model.dao.UserDao;
 import red.project.view.RegisterForm;
 
 /**
@@ -21,14 +23,12 @@ import red.project.view.RegisterForm;
  */
 public final class RegisterController extends BaseController {
     
-    private static final List<UserEncryptMode> modes = new ArrayList<>();
+    private static final List<Algorithm> modes = new ArrayList<>();
     private RegisterForm form;
 
     static {
-        modes.add(UserEncryptMode
-                .getInstance(SHA256.getInstance(), AESCBC.getInstance(), "user-sha256_password-aescbc"));
-        modes.add(UserEncryptMode
-                .getInstance(MD5.getInstance(), MD5.getInstance(), "user-md5_passwrod-md5"));
+        modes.add(MD5.getInstance());
+        modes.add(SHA256.getInstance());
     }
     
     public RegisterController() {
@@ -41,19 +41,19 @@ public final class RegisterController extends BaseController {
     public User registerUser() {
         
         UserEncryptMode encryptMode = getSelectedUserEncyptMode();
-        
-        
         User user = new User(getUsernameInput(), getPasswordInput());
-        System.out.println(user.toString());
         
         try {
-            user = encryptMode.encryptUser(user);
+            UserDao dao = DaoBuilder.build(encryptMode);
+            User encryptedUser = encryptMode.encryptUser(user);
+            
+            dao.saveUserToFile(encryptedUser);
+            clearInputs();
+            return user;    
         } catch (Exception ex) {
             showMessage(ex.getMessage(), "Erro");
         }
         
-        System.out.println(user.toString());
-        clearInputs();
         return user;
     }
     
@@ -102,7 +102,9 @@ public final class RegisterController extends BaseController {
     }
     
     public UserEncryptMode getSelectedUserEncyptMode() {
-        return this.form.getSelectedItem();
+        return UserEncryptMode.getInstance(
+                form.getUsernameEncModeSelectedItem(), 
+                form.getPasswordEncModeSelectedItem());
     }
     
 }

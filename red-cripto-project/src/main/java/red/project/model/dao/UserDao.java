@@ -10,40 +10,37 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import red.project.model.User;
 import red.project.model.UserEncryptMode;
-
 /**
  *
  * @author Matheus
  */
-public final class UserDao {
+public abstract class UserDao {
     
     protected static final Path CURRENT_PATH = Paths.get(System.getProperty("user.dir"));
     protected static String USERS_DIR = null;
-    private String folderName;
-    private UserEncryptMode userEncryptMode;
+    protected String folderNameToSave;
+    protected UserEncryptMode userEncryptMode;
     
     
-    public UserDao(UserEncryptMode userEncryptMode) throws IOException {
+    public UserDao(String folderNameToSave, UserEncryptMode userEncryptMode) throws IOException {
         if(USERS_DIR == null) {
             createUsersDirectory();
         }
+        this.folderNameToSave = folderNameToSave;
         this.userEncryptMode = userEncryptMode;
-        this.folderName = userEncryptMode.getDirName();
     }
             
-    public String saveUserToFile(User user) {
-        throw new UnsupportedOperationException("Unssuported yet.");
-    }
+    public abstract String saveUserToFile(User user) throws Exception ;
     
-    public String findFileByUser(User user) {
-        throw new UnsupportedOperationException("Unssuported yet.");
-    }
+    public abstract User findFileByUser(User user) throws Exception ;
     
-    public void createUsersDirectory() throws IOException {
+    public final void createUsersDirectory() throws IOException {
         if(!usersDirectoryExists()) {
-            Path path = Paths.get(CURRENT_PATH.resolve(CURRENT_PATH + "/users/").toString());
+            Path path = Paths.get(CURRENT_PATH.resolve(CURRENT_PATH + "/users").toString());
             
             File dir = new File(path.toString());
             if(dir.mkdir()) {
@@ -58,18 +55,18 @@ public final class UserDao {
     }
     
     public String getPathToSaveFile() throws IOException {
-        if(!pathToSaveExists()) {
+        if(!pathToSaveFileExists()) {
             return createPathToSaveFile();
         }
-        return null;
+        return CURRENT_PATH.resolve(CURRENT_PATH + "/users/" + folderNameToSave).toString();
     }
     
-    public boolean pathToSaveExists() {
-        return Files.exists(CURRENT_PATH.resolve(CURRENT_PATH + "/users/" + folderName), LinkOption.NOFOLLOW_LINKS);
+    public boolean pathToSaveFileExists() {
+        return Files.exists(CURRENT_PATH.resolve(CURRENT_PATH + "/users/" + folderNameToSave), LinkOption.NOFOLLOW_LINKS);
     }
     
     public String createPathToSaveFile() throws IOException {
-        Path path = Paths.get(CURRENT_PATH.resolve(CURRENT_PATH + "/users/" + folderName).toString());
+        Path path = Paths.get(CURRENT_PATH.resolve(CURRENT_PATH + "/users/" + folderNameToSave).toString());
 
         File dir = new File(path.toString());
         if(dir.mkdir()) {
@@ -77,6 +74,36 @@ public final class UserDao {
         }
         throw new IOException("Não foi possível criar o diretório: " + path.toString()); 
     }
+
+    public static String getUSERS_DIR() {
+        return USERS_DIR;
+    }
+
+    public static void setUSERS_DIR(String USERS_DIR) {
+        UserDao.USERS_DIR = USERS_DIR;
+    }
+
+    public String getFolderNameToSave() {
+        return folderNameToSave;
+    }
+
+    public void setFolderNameToSave(String folderNameToSave) {
+        this.folderNameToSave = folderNameToSave;
+    }
+
+    public UserEncryptMode getUserEncryptMode() {
+        return userEncryptMode;
+    }
+
+    public void setUserEncryptMode(UserEncryptMode userEncryptMode) {
+        this.userEncryptMode = userEncryptMode;
+    }
+    
+    public boolean fileExists(String fullFilePath) {
+        File f = new File(fullFilePath);
+        return f.exists() && !f.isDirectory();
+    }
+    
     
     
 }

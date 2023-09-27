@@ -15,9 +15,7 @@ import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
-import red.project.model.User;
 
 /**
  *
@@ -40,13 +38,13 @@ public class AESCBC extends Algorithm {
         }
     }
     
-        @Override
-    public String encrypt(String value) throws Exception {
+    @Override
+    public String encrypt(String... params) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public String decrypt(String value) throws Exception {
+    public String decrypt(String... params) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     

@@ -5,13 +5,12 @@
 package red.project.view;
 
 import com.formdev.flatlaf.intellijthemes.FlatArcDarkIJTheme;
-import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseListener;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import red.project.algorithms.Algorithm;
 import red.project.model.UserEncryptMode;
 
 /**
@@ -63,12 +62,22 @@ public final class LoginForm extends BaseForm {
     }
     
     public void addUernameInputFocusLost(FocusListener event) {
-        lblUsername.addFocusListener(event);
+        lblCredentialCipher.addFocusListener(event);
     }
     
-    public void setUserEncryptModes(List<UserEncryptMode> modes) {
-        DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel(modes.toArray());
-        cbEncMode.setModel(defaultComboBoxModel);
+    public void setUserEncryptModes(List<Algorithm> modes) {
+        DefaultComboBoxModel defaultUsernameComboBoxModel = new DefaultComboBoxModel(modes.toArray());
+        cbUsernameEncMode.setModel(defaultUsernameComboBoxModel);
+        DefaultComboBoxModel defaultPasswordComboBoxModel = new DefaultComboBoxModel(modes.toArray());
+        cbPasswordEncMode.setModel(defaultPasswordComboBoxModel);
+    }
+    
+    public Algorithm getUsernameEncModeSelectedItem() {
+        return cbUsernameEncMode.getItemAt(cbUsernameEncMode.getSelectedIndex());
+    }
+    
+    public Algorithm getPasswordEncModeSelectedItem() {
+        return cbPasswordEncMode.getItemAt(cbPasswordEncMode.getSelectedIndex());
     }
     
     
@@ -82,31 +91,33 @@ public final class LoginForm extends BaseForm {
     private void initComponents() {
 
         pnlPrincipal = new javax.swing.JPanel();
-        lUsername = new javax.swing.JLabel();
+        lblUsername = new javax.swing.JLabel();
         txtUsername = new javax.swing.JTextField();
         lblPassword = new javax.swing.JLabel();
-        lblUsername = new javax.swing.JLabel();
+        lblCredentialCipher = new javax.swing.JLabel();
         txtPassword = new javax.swing.JPasswordField();
         btnLogin = new javax.swing.JButton();
         lblRegister = new javax.swing.JLabel();
         btnManagement = new javax.swing.JButton();
-        cbEncMode = new javax.swing.JComboBox<>();
-        lblPassword1 = new javax.swing.JLabel();
+        cbPasswordEncMode = new javax.swing.JComboBox<>();
+        lblPasswordEncMode = new javax.swing.JLabel();
+        cbUsernameEncMode = new javax.swing.JComboBox<>();
+        lblUsernameEncMode = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("CredentialCipher [Login]");
         setAlwaysOnTop(true);
         setBackground(new java.awt.Color(0, 0, 0));
 
-        lUsername.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        lUsername.setText("Username:");
+        lblUsername.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lblUsername.setText("Username:");
 
         lblPassword.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         lblPassword.setText("Password:");
 
-        lblUsername.setFont(new java.awt.Font("Arial", 1, 36)); // NOI18N
-        lblUsername.setForeground(new java.awt.Color(51, 153, 255));
-        lblUsername.setText("CredentialCipher");
+        lblCredentialCipher.setFont(new java.awt.Font("Arial", 1, 36)); // NOI18N
+        lblCredentialCipher.setForeground(new java.awt.Color(51, 153, 255));
+        lblCredentialCipher.setText("CredentialCipher");
 
         btnLogin.setBackground(new java.awt.Color(0, 153, 255));
         btnLogin.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -127,8 +138,11 @@ public final class LoginForm extends BaseForm {
             }
         });
 
-        lblPassword1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        lblPassword1.setText("Encryption mode:");
+        lblPasswordEncMode.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lblPasswordEncMode.setText("Password Encryption mode:");
+
+        lblUsernameEncMode.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lblUsernameEncMode.setText("Username Encryption mode:");
 
         javax.swing.GroupLayout pnlPrincipalLayout = new javax.swing.GroupLayout(pnlPrincipal);
         pnlPrincipal.setLayout(pnlPrincipalLayout);
@@ -137,59 +151,62 @@ public final class LoginForm extends BaseForm {
             .addGroup(pnlPrincipalLayout.createSequentialGroup()
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                        .addGap(147, 147, 147)
-                        .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(64, 64, 64)
-                        .addComponent(btnManagement, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
                         .addGap(98, 98, 98)
-                        .addComponent(lblUsername))
+                        .addComponent(lblCredentialCipher))
                     .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                                    .addGap(1, 1, 1)
-                                    .addComponent(lUsername))
-                                .addComponent(lblPassword)
-                                .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                                    .addGap(1, 1, 1)
-                                    .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                                    .addGap(1, 1, 1)
-                                    .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(cbEncMode, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblPassword1))))))
-                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                        .addGap(223, 223, 223)
-                        .addComponent(lblRegister)))
-                .addContainerGap(71, Short.MAX_VALUE))
+                        .addGap(65, 65, 65)
+                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblUsername)
+                            .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                                .addGap(83, 83, 83)
+                                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(64, 64, 64)
+                                .addComponent(btnManagement, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblPassword)
+                                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                                        .addGap(1, 1, 1)
+                                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(cbPasswordEncMode, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lblPasswordEncMode)))))
+                            .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                                .addGap(159, 159, 159)
+                                .addComponent(lblRegister))
+                            .addComponent(cbUsernameEncMode, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblUsernameEncMode))))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
         pnlPrincipalLayout.setVerticalGroup(
             pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlPrincipalLayout.createSequentialGroup()
                 .addGap(40, 40, 40)
-                .addComponent(lblUsername)
+                .addComponent(lblCredentialCipher)
                 .addGap(18, 18, 18)
-                .addComponent(lUsername)
+                .addComponent(lblUsername)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addComponent(lblUsernameEncMode)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbUsernameEncMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(lblPassword)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
-                .addComponent(lblPassword1)
+                .addComponent(lblPasswordEncMode)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbEncMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cbPasswordEncMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37)
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnManagement)
                     .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblRegister)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addGap(19, 19, 19))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -202,7 +219,7 @@ public final class LoginForm extends BaseForm {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -230,12 +247,14 @@ public final class LoginForm extends BaseForm {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnManagement;
-    private javax.swing.JComboBox<UserEncryptMode> cbEncMode;
-    private javax.swing.JLabel lUsername;
+    private javax.swing.JComboBox<Algorithm> cbPasswordEncMode;
+    private javax.swing.JComboBox<Algorithm> cbUsernameEncMode;
+    private javax.swing.JLabel lblCredentialCipher;
     private javax.swing.JLabel lblPassword;
-    private javax.swing.JLabel lblPassword1;
+    private javax.swing.JLabel lblPasswordEncMode;
     private javax.swing.JLabel lblRegister;
     private javax.swing.JLabel lblUsername;
+    private javax.swing.JLabel lblUsernameEncMode;
     private javax.swing.JPanel pnlPrincipal;
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUsername;

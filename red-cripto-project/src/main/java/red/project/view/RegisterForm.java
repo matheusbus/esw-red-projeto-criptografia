@@ -6,12 +6,9 @@ package red.project.view;
 
 import com.formdev.flatlaf.intellijthemes.FlatArcDarkIJTheme;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
-import red.project.model.UserEncryptMode;
+import red.project.algorithms.Algorithm;
 
 /**
  *
@@ -48,9 +45,11 @@ public final class RegisterForm extends BaseForm {
         clearPasswordInput();
     }
     
-    public void setUserEncryptModes(List<UserEncryptMode> modes) {
-        DefaultComboBoxModel defaultComboBoxModel = new DefaultComboBoxModel(modes.toArray());
-        cbEncMode.setModel(defaultComboBoxModel);
+    public void setUserEncryptModes(List<Algorithm> modes) {
+        DefaultComboBoxModel defaultUsernameComboBoxModel = new DefaultComboBoxModel(modes.toArray());
+        cbUsernameEncMode.setModel(defaultUsernameComboBoxModel);
+        DefaultComboBoxModel defaultPasswordComboBoxModel = new DefaultComboBoxModel(modes.toArray());
+        cbPasswordEncMode.setModel(defaultPasswordComboBoxModel);
     }
     
     public void addRegisterButtonAction(ActionListener action) {
@@ -61,8 +60,12 @@ public final class RegisterForm extends BaseForm {
         btnCancel.addActionListener(action);
     }
     
-    public UserEncryptMode getSelectedItem() {
-        return cbEncMode.getItemAt(cbEncMode.getSelectedIndex());
+    public Algorithm getUsernameEncModeSelectedItem() {
+        return cbUsernameEncMode.getItemAt(cbUsernameEncMode.getSelectedIndex());
+    }
+    
+    public Algorithm getPasswordEncModeSelectedItem() {
+        return cbPasswordEncMode.getItemAt(cbPasswordEncMode.getSelectedIndex());
     }
     
     /**
@@ -75,28 +78,30 @@ public final class RegisterForm extends BaseForm {
     private void initComponents() {
 
         pnlPrincipal = new javax.swing.JPanel();
-        lUsername = new javax.swing.JLabel();
+        lblUsername = new javax.swing.JLabel();
         txtUsername = new javax.swing.JTextField();
         lblPassword = new javax.swing.JLabel();
-        lblUsername = new javax.swing.JLabel();
+        lblRegister = new javax.swing.JLabel();
         txtPassword = new javax.swing.JPasswordField();
         btnCancel = new javax.swing.JButton();
         btnRegister = new javax.swing.JButton();
-        lblPassword1 = new javax.swing.JLabel();
-        cbEncMode = new javax.swing.JComboBox<>();
+        lblUsernameEncMode = new javax.swing.JLabel();
+        cbUsernameEncMode = new javax.swing.JComboBox<>();
+        cbPasswordEncMode = new javax.swing.JComboBox<>();
+        lblPasswordEncMode = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("CredentialCipher [Register]");
 
-        lUsername.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        lUsername.setText("Username:");
+        lblUsername.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lblUsername.setText("Username:");
 
         lblPassword.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         lblPassword.setText("Password:");
 
-        lblUsername.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
-        lblUsername.setForeground(new java.awt.Color(51, 153, 255));
-        lblUsername.setText("Register User");
+        lblRegister.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        lblRegister.setForeground(new java.awt.Color(51, 153, 255));
+        lblRegister.setText("Register User");
 
         btnCancel.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         btnCancel.setText("CANCEL");
@@ -109,8 +114,11 @@ public final class RegisterForm extends BaseForm {
         btnRegister.setBorderPainted(false);
         btnRegister.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        lblPassword1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        lblPassword1.setText("Encryption mode:");
+        lblUsernameEncMode.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lblUsernameEncMode.setText("Username Encryption mode:");
+
+        lblPasswordEncMode.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lblPasswordEncMode.setText("Password Encryption mode:");
 
         javax.swing.GroupLayout pnlPrincipalLayout = new javax.swing.GroupLayout(pnlPrincipal);
         pnlPrincipal.setLayout(pnlPrincipalLayout);
@@ -119,45 +127,58 @@ public final class RegisterForm extends BaseForm {
             .addGroup(pnlPrincipalLayout.createSequentialGroup()
                 .addGap(53, 53, 53)
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbEncMode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.Alignment.CENTER)
-                    .addGroup(javax.swing.GroupLayout.Alignment.CENTER, pnlPrincipalLayout.createSequentialGroup()
-                        .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblUsername, javax.swing.GroupLayout.Alignment.CENTER)
-                                .addComponent(lblPassword)
-                                .addComponent(lblPassword1)
-                                .addComponent(lUsername))
-                            .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 435, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 2, Short.MAX_VALUE)))
-                .addGap(56, 56, 56))
+                        .addComponent(lblPasswordEncMode)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                        .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cbPasswordEncMode, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.CENTER, pnlPrincipalLayout.createSequentialGroup()
+                                .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtPassword, javax.swing.GroupLayout.Alignment.CENTER)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlPrincipalLayout.createSequentialGroup()
+                                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(cbUsernameEncMode, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblUsernameEncMode, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(lblUsername, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(txtUsername, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE))
+                                    .addComponent(lblPassword, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(56, 56, 56))))
+            .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                .addGap(176, 176, 176)
+                .addComponent(lblRegister)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         pnlPrincipalLayout.setVerticalGroup(
             pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                .addGap(34, 34, 34)
+                .addGap(36, 36, 36)
+                .addComponent(lblRegister)
+                .addGap(29, 29, 29)
                 .addComponent(lblUsername)
-                .addGap(31, 31, 31)
-                .addComponent(lUsername)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblUsernameEncMode)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbUsernameEncMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(lblPassword)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(lblPassword1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbEncMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42)
+                .addComponent(lblPasswordEncMode)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbPasswordEncMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addGap(26, 26, 26))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -192,11 +213,13 @@ public final class RegisterForm extends BaseForm {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnRegister;
-    private javax.swing.JComboBox<UserEncryptMode> cbEncMode;
-    private javax.swing.JLabel lUsername;
+    private javax.swing.JComboBox<Algorithm> cbPasswordEncMode;
+    private javax.swing.JComboBox<Algorithm> cbUsernameEncMode;
     private javax.swing.JLabel lblPassword;
-    private javax.swing.JLabel lblPassword1;
+    private javax.swing.JLabel lblPasswordEncMode;
+    private javax.swing.JLabel lblRegister;
     private javax.swing.JLabel lblUsername;
+    private javax.swing.JLabel lblUsernameEncMode;
     private javax.swing.JPanel pnlPrincipal;
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUsername;

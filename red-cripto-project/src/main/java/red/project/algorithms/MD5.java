@@ -4,10 +4,6 @@
  */
 package red.project.algorithms;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bouncycastle.util.Strings;
 import org.bouncycastle.util.encoders.Hex;
 import red.examples.JcaUtils;
@@ -23,32 +19,33 @@ public class MD5 extends Algorithm {
     }
     
     @Override
-    public String encrypt(String value) throws Exception {
+    public String encrypt(String... params) throws Exception {
         String hashValue;
         
-        try {
-            hashValue = Hex.toHexString(JcaUtils.computeDigest("MD5", Strings.toByteArray(value)));
-        }
-        catch (NoSuchAlgorithmException | NoSuchProviderException ex) {
-            throw new Exception("Falha ao aplicar hash MD5 no valor fornecido: " + ex.getMessage());
-        }
+        hashValue = Hex.toHexString(JcaUtils.computeDigest("MD5", Strings.toByteArray(params[0])));
         
         return hashValue;
     }
 
     @Override
-    public String decrypt(String value) throws Exception {
+    public String decrypt(String... params) throws Exception {
         throw new Exception("MD5 não possui algoritmo de descriptografia."); 
     }
     
     public static void main(String[] args) {
+        String[] params = {"matheusbus"};
         
         try {
-            System.out.println(MD5.getInstance().encrypt("matheusbus"));
+            System.out.println(MD5.getInstance().encrypt(params[0]));
         } catch (Exception ex) {
             System.out.println("Erro: " + ex.getMessage());
         }
         
+        try {
+            System.out.println(MD5.getInstance().decrypt(params[0]));
+        } catch (Exception ex) {
+            System.out.println("Erro: " + ex.getMessage());
+        }
         
     }
     

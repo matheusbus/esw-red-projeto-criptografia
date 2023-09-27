@@ -4,15 +4,10 @@
  */
 package red.project.algorithms;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.Security;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.Strings;
 import org.bouncycastle.util.encoders.Hex;
 import red.examples.JcaUtils;
+import red.project.model.dao.DaoBuilder;
 
 /**
  *
@@ -25,29 +20,32 @@ public class SHA256 extends Algorithm {
     }
     
     @Override
-    public String encrypt(String value) throws Exception {
+    public String encrypt(String... params) throws Exception {
         String hashValue;
         
-        try {
-            hashValue = Hex.toHexString(JcaUtils.computeDigest("SHA-256", Strings.toByteArray(value)));
-        }
-        catch (NoSuchAlgorithmException | NoSuchProviderException ex) {
-            throw new Exception("Falha ao aplicar hash SHA-256 no valor fornecido: " + ex.getMessage());
-        }
+        hashValue = Hex.toHexString(JcaUtils.computeDigest("SHA-256", Strings.toByteArray(params[0])));
         return hashValue;
     }
     
-    public static void main(String[] args) {
-        try {
-            System.out.println(SHA256.getInstance().encrypt("matheusbus"));
-        } catch (Exception ex) {
-            Logger.getLogger(SHA256.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
-
     @Override
-    public String decrypt(String value) throws Exception {
+    public String decrypt(String... params) throws Exception {
         throw new Exception("SHA256 não possui algoritmo de descriptografia."); 
+    }
+    
+    public static void main(String[] args) {
+        String[] params = {"matheusbus"};
+        
+        try {
+            System.out.println(SHA256.getInstance().encrypt(params[0]));
+        } catch (Exception ex) {
+            System.out.println("Erro: " + ex.getMessage());
+        }
+        
+        try {
+            System.out.println(SHA256.getInstance().decrypt(params[0]));
+        } catch (Exception ex) {
+            System.out.println("Erro: " + ex.getMessage());
+        }
     }
 
 }

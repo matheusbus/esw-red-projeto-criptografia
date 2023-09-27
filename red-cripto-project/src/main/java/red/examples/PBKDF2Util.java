@@ -61,14 +61,20 @@ public class PBKDF2Util {
 
         //senha = "123456789";
         salt = obj.getSalt();
+        String salt2 = obj.getSalt();
+        
 
         System.out.println("Senha original = " + senha);
         System.out.println("Sal gerado = " + salt);
+        System.out.println("Sal gerado = " + salt2);        
         System.out.println("Numero de iteracoes = " + it);
 
         String chaveDerivada = generateDerivedKey(senha, salt, it);
+        String chaveDerivada2 = generateDerivedKey(senha, salt2, it);
 
         System.out.println("Chave derivada da senha = " + chaveDerivada );
+        System.out.println("Chave derivada da senha = " + chaveDerivada2 );
+
 
     }
 

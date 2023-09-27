@@ -17,8 +17,13 @@ public abstract class Algorithm {
         Security.addProvider(new BouncyCastleProvider());
     }
     
-    public abstract String encrypt(String value) throws Exception;
+    public abstract String encrypt(String... params) throws Exception;
     
-    public abstract String decrypt(String value) throws Exception;
+    public abstract String decrypt(String... params) throws Exception;
+    
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
     
 }
