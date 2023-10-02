@@ -4,6 +4,7 @@
  */
 package red.project.algorithms;
 
+import java.util.HashMap;
 import org.bouncycastle.util.Strings;
 import org.bouncycastle.util.encoders.Hex;
 import red.examples.JcaUtils;
@@ -20,15 +21,15 @@ public class SHA256 extends Algorithm {
     }
     
     @Override
-    public String encrypt(String... params) throws Exception {
-        String hashValue;
-        
-        hashValue = Hex.toHexString(JcaUtils.computeDigest("SHA-256", Strings.toByteArray(params[0])));
-        return hashValue;
+    public HashMap<String,Object> encrypt(String... params) throws Exception {
+        HashMap<String,Object> values = new HashMap<>();
+        String hashValue = Hex.toHexString(JcaUtils.computeDigest("SHA-256", Strings.toByteArray(params[0])));
+        values.put("value", hashValue);
+        return values;
     }
     
     @Override
-    public String decrypt(String... params) throws Exception {
+    public HashMap<String,Object> decrypt(HashMap<String, Object> params) throws Exception {
         throw new Exception("SHA256 não possui algoritmo de descriptografia."); 
     }
     
@@ -37,12 +38,6 @@ public class SHA256 extends Algorithm {
         
         try {
             System.out.println(SHA256.getInstance().encrypt(params[0]));
-        } catch (Exception ex) {
-            System.out.println("Erro: " + ex.getMessage());
-        }
-        
-        try {
-            System.out.println(SHA256.getInstance().decrypt(params[0]));
         } catch (Exception ex) {
             System.out.println("Erro: " + ex.getMessage());
         }

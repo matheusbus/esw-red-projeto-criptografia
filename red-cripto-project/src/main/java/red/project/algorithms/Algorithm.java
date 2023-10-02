@@ -5,6 +5,7 @@
 package red.project.algorithms;
 
 import java.security.Security;
+import java.util.HashMap;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
@@ -17,9 +18,9 @@ public abstract class Algorithm {
         Security.addProvider(new BouncyCastleProvider());
     }
     
-    public abstract String encrypt(String... params) throws Exception;
+    public abstract HashMap<String, Object> encrypt(String... params) throws Exception;
     
-    public abstract String decrypt(String... params) throws Exception;
+    public abstract HashMap<String, Object> decrypt(HashMap<String, Object> params) throws Exception;
     
     @Override
     public String toString() {

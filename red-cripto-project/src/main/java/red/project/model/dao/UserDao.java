@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import red.project.model.User;
@@ -34,9 +35,9 @@ public abstract class UserDao {
         this.userEncryptMode = userEncryptMode;
     }
             
-    public abstract String saveUserToFile(User user) throws Exception ;
+    public abstract String saveUserToFile(HashMap<String,Object> params) throws Exception ;
     
-    public abstract User findFileByUser(User user) throws Exception ;
+    public abstract User findFileByUser(HashMap<String,Object> params) throws Exception ;
     
     public final void createUsersDirectory() throws IOException {
         if(!usersDirectoryExists()) {

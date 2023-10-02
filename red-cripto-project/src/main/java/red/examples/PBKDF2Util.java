@@ -6,6 +6,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Scanner;
 import javax.crypto.SecretKey;
 //import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -24,25 +25,22 @@ public class PBKDF2Util {
      * @param iterations
      * @return
      */
-    public static String generateDerivedKey(
-            String password, String salt, Integer iterations) {
-        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), salt.getBytes(), iterations, 128);
+    public static SecretKey generateDerivedKey(String password, Integer iterations) throws NoSuchAlgorithmException {
+        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), getSalt().getBytes(), iterations, 128);
         SecretKeyFactory pbkdf2 = null;
-        String derivedPass = null;
+        SecretKey sk = null;
+        
         try {
             pbkdf2 = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
-            SecretKey sk = pbkdf2.generateSecret(spec);
-            derivedPass = Hex.toHexString(sk.getEncoded());
+            sk = pbkdf2.generateSecret(spec);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return derivedPass;
+        return sk;
     }
 
-    /*Usado para gerar o salt  */
-    public String getSalt() throws NoSuchAlgorithmException {
+    public static String getSalt() throws NoSuchAlgorithmException {
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-        //SecureRandom sr = new SecureRandom();
         byte[] salt = new byte[16];
         sr.nextBytes(salt);
         return Hex.toHexString(salt);
@@ -52,25 +50,14 @@ public class PBKDF2Util {
         PBKDF2Util obj = new PBKDF2Util();
 
         String senha;
-        String salt;
-        int it = 10000;
 
         Scanner input = new Scanner(System.in);
         System.out.println("Digite a senha: ");
         senha = input.nextLine();
+        int it = senha.length() * 1000;
 
-        //senha = "123456789";
-        salt = obj.getSalt();
-        String salt2 = obj.getSalt();
-        
-
-        System.out.println("Senha original = " + senha);
-        System.out.println("Sal gerado = " + salt);
-        System.out.println("Sal gerado = " + salt2);        
-        System.out.println("Numero de iteracoes = " + it);
-
-        String chaveDerivada = generateDerivedKey(senha, salt, it);
-        String chaveDerivada2 = generateDerivedKey(senha, salt2, it);
+        String chaveDerivada = Arrays.toString(generateDerivedKey(senha, it).getEncoded());
+        String chaveDerivada2 = Arrays.toString(generateDerivedKey(senha, it).getEncoded());
 
         System.out.println("Chave derivada da senha = " + chaveDerivada );
         System.out.println("Chave derivada da senha = " + chaveDerivada2 );

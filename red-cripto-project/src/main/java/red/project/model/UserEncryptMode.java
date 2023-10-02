@@ -42,13 +42,24 @@ public class UserEncryptMode {
     }
     
     public User encryptUser(User user) throws Exception {
-        user.setUsername(usernameEncryptMode.encrypt(user.getUsername()));
-        user.setPassword(passwordEncryptMode.encrypt(user.getPassword()));
+        
+        user.setUsername((String) usernameEncryptMode
+                .encrypt(user.getUsername())
+                .get("value"));
+        user.setPassword((String) passwordEncryptMode
+                .encrypt(user.getPassword())
+                .get("value"));
+        
         return user;
     }
     
     @Override
     public String toString() {
-        return "USERNAME = " + usernameEncryptMode.getClass().getSimpleName() + " | PASSWORD = " + passwordEncryptMode.getClass().getSimpleName();
+        return "USERNAME = " + usernameEncryptMode
+                .getClass()
+                .getSimpleName() 
+          + " | PASSWORD = " + passwordEncryptMode
+                .getClass()
+                .getSimpleName();
     }
 }

@@ -10,7 +10,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
-import red.project.algorithms.MD5;
 import red.project.model.User;
 import red.project.model.UserEncryptMode;
 
@@ -18,17 +17,17 @@ import red.project.model.UserEncryptMode;
  *
  * @author matheus
  */
-public class UserDao_MD5_MD5 extends UserDao {
+public class UserDao_SHA256_MD5 extends UserDao {
 
-    public UserDao_MD5_MD5(UserEncryptMode userEncryptMode) throws IOException {
-        super("username-md5_password-md5", userEncryptMode);
+    public UserDao_SHA256_MD5(UserEncryptMode userEncryptMode) throws IOException {
+        super("username-sha256_password-md5", userEncryptMode);
     }
-    
+
     @Override
     public String saveUserToFile(HashMap<String,Object> params) throws Exception {
         String pathToSaveFile, arqName, fullFilePath;
-        pathToSaveFile = getPathToSaveFile();
         
+        pathToSaveFile = getPathToSaveFile();
         User user = (User) params.get("user");
         String[] key = {user.getUsername()+user.getPassword()};
         arqName = (String) userEncryptMode.getUsernameEncryptMode().encrypt(key).get("value");

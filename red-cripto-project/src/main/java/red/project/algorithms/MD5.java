@@ -4,6 +4,7 @@
  */
 package red.project.algorithms;
 
+import java.util.HashMap;
 import org.bouncycastle.util.Strings;
 import org.bouncycastle.util.encoders.Hex;
 import red.examples.JcaUtils;
@@ -19,16 +20,16 @@ public class MD5 extends Algorithm {
     }
     
     @Override
-    public String encrypt(String... params) throws Exception {
-        String hashValue;
+    public HashMap<String, Object> encrypt(String... params) throws Exception {
+        HashMap<String, Object> values = new HashMap<>();
+        String hashValue = Hex.toHexString(JcaUtils.computeDigest("MD5", Strings.toByteArray(params[0])));
+        values.put("value", hashValue);
         
-        hashValue = Hex.toHexString(JcaUtils.computeDigest("MD5", Strings.toByteArray(params[0])));
-        
-        return hashValue;
+        return values;
     }
 
     @Override
-    public String decrypt(String... params) throws Exception {
+    public HashMap<String, Object> decrypt(HashMap<String, Object> params) throws Exception {
         throw new Exception("MD5 não possui algoritmo de descriptografia."); 
     }
     
@@ -37,12 +38,6 @@ public class MD5 extends Algorithm {
         
         try {
             System.out.println(MD5.getInstance().encrypt(params[0]));
-        } catch (Exception ex) {
-            System.out.println("Erro: " + ex.getMessage());
-        }
-        
-        try {
-            System.out.println(MD5.getInstance().decrypt(params[0]));
         } catch (Exception ex) {
             System.out.println("Erro: " + ex.getMessage());
         }

@@ -15,22 +15,14 @@ import red.project.model.UserEncryptMode;
 public class DaoBuilder {
     
     public static UserDao build(UserEncryptMode uem) throws Exception {
-        if        ((uem.getUsernameEncryptMode() instanceof MD5) && (uem.getPasswordEncryptMode() instanceof MD5)) {
+        if ((uem.getUsernameEncryptMode() instanceof MD5) && (uem.getPasswordEncryptMode() instanceof MD5)) {
             return new UserDao_MD5_MD5(uem);
         } else if ((uem.getUsernameEncryptMode() instanceof MD5) && (uem.getPasswordEncryptMode() instanceof SHA256)) {
-            
+            return new UserDao_MD5_SHA256(uem);
         } else if ((uem.getUsernameEncryptMode() instanceof SHA256) && (uem.getPasswordEncryptMode() instanceof MD5)) {
-            
-        } else if ((uem.getUsernameEncryptMode() instanceof MD5) && (uem.getPasswordEncryptMode() instanceof SHA256)) {
-            
-        } else if ((uem.getUsernameEncryptMode() instanceof MD5) && (uem.getPasswordEncryptMode() instanceof SHA256)) {
-            
-        } else if ((uem.getUsernameEncryptMode() instanceof MD5) && (uem.getPasswordEncryptMode() instanceof SHA256)) {
-            
-        } else if ((uem.getUsernameEncryptMode() instanceof MD5) && (uem.getPasswordEncryptMode() instanceof SHA256)) {
-            
-        } else if ((uem.getUsernameEncryptMode() instanceof MD5) && (uem.getPasswordEncryptMode() instanceof SHA256)) {
-            
+            return new UserDao_SHA256_MD5(uem);
+        } else if ((uem.getUsernameEncryptMode() instanceof SHA256) && (uem.getPasswordEncryptMode() instanceof SHA256)) {
+            return new UserDao_SHA256_SHA256(uem);
         }
         throw new Exception("Erro: UserDAO mode does not exists.");
         

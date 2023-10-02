@@ -7,6 +7,7 @@ package red.project.controller;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import red.project.algorithms.Algorithm;
 import red.project.algorithms.MD5;
@@ -59,14 +60,16 @@ public final class LoginController extends BaseController {
             userToSearch = userEncryptMode.encryptUser(userToSearch);
 
             UserDao dao = DaoBuilder.build(userEncryptMode);
-            User userSearched = dao.findFileByUser(userToSearch);
+            HashMap<String,Object> values = new HashMap<>();
+            values.put("user", userToSearch);
+            User userSearched = dao.findFileByUser(values);
             
             if(userSearched == null) {
                 showMessage("Usuário ou senha inválidos.", "Aviso");
             } else {
                 if((userToSearch.getUsername().equals(userSearched.getUsername()))
                         && (userToSearch.getPassword().equals(userSearched.getPassword()))) {
-                    autentica();
+                    auth();
                 }
             }
         }
@@ -76,7 +79,7 @@ public final class LoginController extends BaseController {
         
     }
     
-    public void autentica() {
+    public void auth() {
         showMessage("Usuário autenticado com sucesso!", "Sucesso");
     }
     

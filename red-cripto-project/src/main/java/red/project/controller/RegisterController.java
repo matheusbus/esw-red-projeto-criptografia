@@ -5,6 +5,7 @@
 package red.project.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,21 +41,33 @@ public final class RegisterController extends BaseController {
     
     public User registerUser() {
         
-        UserEncryptMode encryptMode = getSelectedUserEncyptMode();
-        User user = new User(getUsernameInput(), getPasswordInput());
-        
-        try {
-            UserDao dao = DaoBuilder.build(encryptMode);
-            User encryptedUser = encryptMode.encryptUser(user);
+        if(validateFields()) {
+            UserEncryptMode encryptMode = getSelectedUserEncyptMode();
+            User user = new User(getUsernameInput(), getPasswordInput());
+
+            try {
+                UserDao dao = DaoBuilder.build(encryptMode);
+                User encryptedUser = encryptMode.encryptUser(user);
+
+                HashMap<String,Object> values = new HashMap<>();
+                values.put("user", encryptedUser);
+                
+                dao.saveUserToFile(values);
+                
+                clearInputs();
+                return user;    
+            } catch (Exception ex) {
+                showMessage(ex.getMessage(), "Erro");
+            }
             
-            dao.saveUserToFile(encryptedUser);
-            clearInputs();
-            return user;    
-        } catch (Exception ex) {
-            showMessage(ex.getMessage(), "Erro");
+            returnLoginForm();
+            
+            return user;
+        } else {
+            showMessage("Preencha todos os campos!", "Erro");
+            return null;
         }
         
-        return user;
     }
     
     public LoginController returnLoginForm() {
@@ -101,10 +114,16 @@ public final class RegisterController extends BaseController {
         this.form.clearAllInputs();
     }
     
+    public boolean validateFields() {
+        return !(getUsernameInput().isBlank() || getPasswordInput().isBlank());
+    }
+    
     public UserEncryptMode getSelectedUserEncyptMode() {
         return UserEncryptMode.getInstance(
                 form.getUsernameEncModeSelectedItem(), 
                 form.getPasswordEncModeSelectedItem());
     }
+    
+    
     
 }
