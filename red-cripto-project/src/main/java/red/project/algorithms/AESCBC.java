@@ -120,6 +120,11 @@ public class AESCBC extends Algorithm {
         return paddedData;
     }
     
+    private static byte[] unpadData(byte[] input) {
+        int padding = input[input.length - 1];
+        return Arrays.copyOfRange(input, 0, input.length - padding);
+    }
+    
     public static void main(String[] args) throws Exception {
         
         //1- Pegar a senha fornecida pelo usuário
@@ -141,20 +146,21 @@ public class AESCBC extends Algorithm {
         System.out.println("IV string: " + Hex.toHexString(iv));
         System.out.println("IV retornado da string: " + Arrays.toString(Hex.decode(Hex.toHexString(iv))));
         
-        IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
         
         //4- Criptografar senha
-        cipher.init(Cipher.ENCRYPT_MODE, key, ivParameterSpec);
+        
         // Criptografar
+        cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));        
         byte[] paddedInput = padData(password.getBytes());
         byte[] encrypted = cipher.doFinal(paddedInput);
         System.out.println("Criptografado: " + Hex.toHexString(encrypted));
         
         
         //Descriptografar
-        cipher.init(Cipher.DECRYPT_MODE, key, ivParameterSpec);
+        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
         byte[] decrypted = cipher.doFinal(encrypted);
-        System.out.println("Descriptografado: " + Arrays.toString(decrypted));
+        byte[] unpaddedOutput = unpadData(decrypted);
+        System.out.println("Descriptografado: " + Hex.toHexString(unpaddedOutput));
         
         //4- Guardar em um arquivo cifrado com AES EBC a chave secreta e o IV
         
