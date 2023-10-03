@@ -113,23 +113,6 @@ public final class LoginController extends BaseController {
                 }
                 
             }
-//            UserEncryptMode userEncryptMode = getSelectedUserEncyptMode();
-//            User userToSearch = new User(getUsernameInput(), getPasswordInput());
-//            userToSearch = userEncryptMode.encryptUser(userToSearch);
-
-//            UserDao dao = DaoBuilder.build(userEncryptMode);
-//            HashMap<String,Object> values = new HashMap<>();
-//            values.put("user", userToSearch);
-//            User userSearched = dao.findFileByUser(values);
-            
-//            if(userSearched == null) {
-//                showMessage("Usuário ou senha inválidos.", "Aviso");
-//            } else {
-//                if((userToSearch.getUsername().equals(userSearched.getUsername()))
-//                       && (userToSearch.getPassword().equals(userSearched.getPassword()))) {
-//                    auth();
-//                }
-//            }
         }
         catch (Exception ex) {
             showMessage("Erro: " + ex.getMessage(), "Erro");

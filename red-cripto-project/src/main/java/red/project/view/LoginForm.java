@@ -229,20 +229,6 @@ public final class LoginForm extends BaseForm {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnManagementActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        
-        FlatArcDarkIJTheme.setup();
-        
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LoginForm().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;

@@ -32,16 +32,5 @@ public class SHA256 extends Algorithm {
     public HashMap<String,Object> decrypt(HashMap<String, Object> params) throws Exception {
         throw new Exception("SHA256 não possui algoritmo de descriptografia."); 
     }
-    
-    public static void main(String[] args) {
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("value", "matheusbus");
-        
-        try {
-            System.out.println(SHA256.getInstance().encrypt(params).get("value").toString());
-        } catch (Exception ex) {
-            System.out.println("Erro: " + ex.getMessage());
-        }
-    }
 
 }

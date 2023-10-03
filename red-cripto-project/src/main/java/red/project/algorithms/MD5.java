@@ -33,16 +33,4 @@ public class MD5 extends Algorithm {
         throw new Exception("MD5 não possui algoritmo de descriptografia."); 
     }
     
-    public static void main(String[] args) {
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("value", "matheusbus");
-        
-        try {
-            System.out.println(MD5.getInstance().encrypt(params).get("value").toString());
-        } catch (Exception ex) {
-            System.out.println("Erro: " + ex.getMessage());
-        }
-        
-    }
-    
 }

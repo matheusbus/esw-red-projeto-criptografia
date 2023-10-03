@@ -5,23 +5,16 @@
 package red.project.algorithms;
 
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
-import java.security.Security;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HexFormat;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import org.bouncycastle.util.encoders.Hex;
 import red.examples.PBKDF2Util;
 
 /**
@@ -121,35 +114,4 @@ public class AESCBC extends Algorithm {
         }
         return valor;
     }
-    
-    public static void main(String[] args) throws Exception {
-        
-        //1- Pegar a senha fornecida pelo usuário
-        //Scanner sc = new Scanner(System.in);
-        String password = "matheus";
-        System.out.println("Senha: " + password);
-        
-        //2- Derivar uma chave secreta com PBKDF2 utilizando a senha do usuário
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("value", password);
-        AESCBC cifrador = AESCBC.getInstance();
-        HashMap<String, Object> retorno = cifrador.encrypt(params);
-        System.out.println("Secret Key: " + retorno.get("key"));
-        System.out.println("IV: " + retorno.get("iv"));
-        System.out.println("Senha criptografada: " + retorno.get("value"));
-        
-        HashMap<String, Object> data = cifrador.decrypt(retorno);
-        System.out.println("-----");
-        System.out.println("Secret Key: " + data.get("key"));
-        System.out.println("IV: " + data.get("iv"));
-        System.out.println("Senha descriptografada: " + data.get("value"));
-        
-        //4- Guardar em um arquivo cifrado com AES EBC a chave secreta e o IV
-        
-        
-        //5- Guardar em um outro arquivo o usuário cifrado com SHA256 e a senha cifrado com o AESCBC
-        
-        
-    }
-    
 }

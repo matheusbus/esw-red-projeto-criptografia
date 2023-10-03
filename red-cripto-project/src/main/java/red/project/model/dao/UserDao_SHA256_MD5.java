@@ -52,7 +52,8 @@ public class UserDao_SHA256_MD5 extends UserDao {
         
         pathToSaveFile = getPathToSaveFile();
         HashMap<String, Object> keyNameFile = new HashMap<>();
-        String nameFile = ((String) paramsUsername.get("value")) + ((String) paramsPassword.get("value"));
+        String nameFile = ((String) userEncryptMode.getUsernameEncryptMode().encrypt(paramsUsername).get("value"))
+                + ((String) userEncryptMode.getUsernameEncryptMode().encrypt(paramsPassword).get("value"));
         keyNameFile.put("value", nameFile);
         arqName = (String) userEncryptMode.getUsernameEncryptMode().encrypt(keyNameFile).get("value");
         

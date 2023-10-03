@@ -48,24 +48,4 @@ public class PBKDF2Util {
         return salt;
     }
 
-    public static void main(String args[]) throws NoSuchAlgorithmException {
-        PBKDF2Util obj = new PBKDF2Util();
-
-        String senha;
-
-        Scanner input = new Scanner(System.in);
-        System.out.println("Digite a senha: ");
-        senha = input.nextLine();
-        int it = senha.length() * 1000;
-
-        String chaveDerivada = Arrays.toString(generateDerivedKey(senha, it).getEncoded());
-        String chaveDerivada2 = Arrays.toString(generateDerivedKey(senha, it).getEncoded());
-
-        System.out.println("Chave derivada da senha = " + Hex.toHexString(chaveDerivada.getBytes()));
-        System.out.println("Chave derivada da senha = " + Hex.toHexString(chaveDerivada2.getBytes()));
-
-
-    }
-
-
 }
