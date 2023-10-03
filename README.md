@@ -1,4 +1,4 @@
-# 55RED - 006 - Projeto Criptografia
+# 55RED - Projeto Criptografia
 
 ---
 
