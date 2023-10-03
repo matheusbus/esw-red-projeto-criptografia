@@ -35,9 +35,9 @@ public abstract class UserDao {
         this.userEncryptMode = userEncryptMode;
     }
             
-    public abstract String saveUserToFile(HashMap<String,Object> params) throws Exception ;
+    public abstract String saveUserToFile(HashMap<String,Object> paramsUsername, HashMap<String,Object> paramsPassword) throws Exception ;
     
-    public abstract User findFileByUser(HashMap<String,Object> params) throws Exception ;
+    public abstract User findFileByUser(HashMap<String,Object> paramsUsername, HashMap<String,Object> paramsPassword) throws Exception ;
     
     public final void createUsersDirectory() throws IOException {
         if(!usersDirectoryExists()) {

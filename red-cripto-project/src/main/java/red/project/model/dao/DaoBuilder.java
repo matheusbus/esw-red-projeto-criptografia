@@ -4,6 +4,7 @@
  */
 package red.project.model.dao;
 
+import red.project.algorithms.AESCBC;
 import red.project.algorithms.MD5;
 import red.project.algorithms.SHA256;
 import red.project.model.UserEncryptMode;
@@ -23,8 +24,10 @@ public class DaoBuilder {
             return new UserDao_SHA256_MD5(uem);
         } else if ((uem.getUsernameEncryptMode() instanceof SHA256) && (uem.getPasswordEncryptMode() instanceof SHA256)) {
             return new UserDao_SHA256_SHA256(uem);
-        }
-        throw new Exception("Erro: UserDAO mode does not exists.");
+        } else if ((uem.getUsernameEncryptMode() instanceof SHA256) && (uem.getPasswordEncryptMode() instanceof AESCBC)) {
+            return new UserDao_SHA256_AESCBC(uem);
+        } 
+        throw new Exception("Esse modo de criptografia ainda não foi implementado.");
         
     }
     

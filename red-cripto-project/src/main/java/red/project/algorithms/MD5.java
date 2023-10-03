@@ -20,9 +20,9 @@ public class MD5 extends Algorithm {
     }
     
     @Override
-    public HashMap<String, Object> encrypt(String... params) throws Exception {
+    public HashMap<String, Object> encrypt(HashMap<String, Object> params) throws Exception {
+        String hashValue = Hex.toHexString(JcaUtils.computeDigest("MD5", Strings.toByteArray((String) params.get("value"))));
         HashMap<String, Object> values = new HashMap<>();
-        String hashValue = Hex.toHexString(JcaUtils.computeDigest("MD5", Strings.toByteArray(params[0])));
         values.put("value", hashValue);
         
         return values;
@@ -34,10 +34,11 @@ public class MD5 extends Algorithm {
     }
     
     public static void main(String[] args) {
-        String[] params = {"matheusbus"};
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("value", "matheusbus");
         
         try {
-            System.out.println(MD5.getInstance().encrypt(params[0]));
+            System.out.println(MD5.getInstance().encrypt(params).get("value").toString());
         } catch (Exception ex) {
             System.out.println("Erro: " + ex.getMessage());
         }

@@ -21,9 +21,9 @@ public class SHA256 extends Algorithm {
     }
     
     @Override
-    public HashMap<String,Object> encrypt(String... params) throws Exception {
+    public HashMap<String,Object> encrypt(HashMap<String,Object> params) throws Exception {
         HashMap<String,Object> values = new HashMap<>();
-        String hashValue = Hex.toHexString(JcaUtils.computeDigest("SHA-256", Strings.toByteArray(params[0])));
+        String hashValue = Hex.toHexString(JcaUtils.computeDigest("SHA-256", Strings.toByteArray((String) params.get("value"))));
         values.put("value", hashValue);
         return values;
     }
@@ -34,10 +34,11 @@ public class SHA256 extends Algorithm {
     }
     
     public static void main(String[] args) {
-        String[] params = {"matheusbus"};
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("value", "matheusbus");
         
         try {
-            System.out.println(SHA256.getInstance().encrypt(params[0]));
+            System.out.println(SHA256.getInstance().encrypt(params).get("value").toString());
         } catch (Exception ex) {
             System.out.println("Erro: " + ex.getMessage());
         }

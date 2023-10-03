@@ -4,6 +4,7 @@
  */
 package red.project.model;
 
+import java.util.HashMap;
 import red.project.algorithms.Algorithm;
 import red.project.model.dao.UserDao;
 
@@ -17,10 +18,13 @@ public class UserEncryptMode {
     
     private Algorithm passwordEncryptMode;
     
-    public static UserEncryptMode getInstance(Algorithm usernameEncryptMode, Algorithm passwordEncryptMode) {
+    private UserDao userDao;
+    
+    public static UserEncryptMode getInstance(Algorithm usernameEncryptMode, Algorithm passwordEncryptMode, UserDao dao) {
         UserEncryptMode userEncryptMode = new UserEncryptMode();
         userEncryptMode.setUsernameEncryptMode(usernameEncryptMode);
         userEncryptMode.setPasswordEncryptMode(passwordEncryptMode);
+        userEncryptMode.setUserDao(dao);
         
         return userEncryptMode;
     }
@@ -40,17 +44,29 @@ public class UserEncryptMode {
     public void setPasswordEncryptMode(Algorithm passwordEncryptMode) {
         this.passwordEncryptMode = passwordEncryptMode;
     }
+
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
     
-    public User encryptUser(User user) throws Exception {
+    public void encryptUser(User user) throws Exception {
+        HashMap<String,Object> paramsUsername = new HashMap<>();
+        HashMap<String,Object> paramsPassword = new HashMap<>();
+        paramsUsername.put("value", user.getUsername());
+        paramsPassword.put("value", user.getPassword());
+
+        paramsUsername = usernameEncryptMode.encrypt(paramsUsername);
+        paramsPassword = passwordEncryptMode.encrypt(paramsPassword);
         
-        user.setUsername((String) usernameEncryptMode
-                .encrypt(user.getUsername())
-                .get("value"));
-        user.setPassword((String) passwordEncryptMode
-                .encrypt(user.getPassword())
-                .get("value"));
-        
-        return user;
+        andThenSave(paramsUsername, paramsPassword);
+    }
+    
+    public void andThenSave(HashMap<String,Object> paramsUsername, HashMap<String,Object> paramsPassword) throws Exception {
+        userDao.saveUserToFile(paramsUsername, paramsPassword);
     }
     
     @Override

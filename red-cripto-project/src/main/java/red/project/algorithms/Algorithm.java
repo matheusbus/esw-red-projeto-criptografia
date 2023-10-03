@@ -18,7 +18,7 @@ public abstract class Algorithm {
         Security.addProvider(new BouncyCastleProvider());
     }
     
-    public abstract HashMap<String, Object> encrypt(String... params) throws Exception;
+    public abstract HashMap<String, Object> encrypt(HashMap<String, Object> params) throws Exception;
     
     public abstract HashMap<String, Object> decrypt(HashMap<String, Object> params) throws Exception;
     

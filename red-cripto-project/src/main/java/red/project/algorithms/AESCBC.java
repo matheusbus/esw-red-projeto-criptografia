@@ -38,7 +38,7 @@ public class AESCBC extends Algorithm {
     
     static {
         try {
-            cipher = Cipher.getInstance("AES/CBC/NoPadding", "BC");
+            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
         } 
         catch (NoSuchAlgorithmException | NoSuchProviderException | NoSuchPaddingException ex) {
             Logger.getLogger(AESCBC.class.getName()).log(Level.SEVERE, null, ex);
@@ -46,121 +46,103 @@ public class AESCBC extends Algorithm {
     }
     
     @Override
-    public HashMap<String, Object> encrypt(String... params) throws Exception {
+    public HashMap<String, Object> encrypt(HashMap<String, Object> params) throws Exception {
         HashMap<String, Object> values = new HashMap<>();
         
-        String password = params[0];
+        String password = (String) params.get("value");
         
         // Gerar chave secreta com PBKDF
-        SecretKeySpec key = new SecretKeySpec(generateSecretKey(password).getEncoded(), "AES");
+        SecretKeySpec key = generateSecretKey(password);
         
         // Gerar um IV aleatório
-        byte[] iv = Hex.decode(generateIV());
+        byte[] iv = generateIV();
         
         // Inicializar cifrador
         cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
         
-        // Compactar no tamanho do bloco correto
-        byte[] paddedInput = padData(password.getBytes());
-        byte[] encrypted = cipher.doFinal(paddedInput);
+        // Aplicar criptografia
+        byte[] passwordEncrypted = cipher.doFinal(password.getBytes());
         
-        values.put("value", Hex.toHexString(encrypted));
-        values.put("key", key);
-        values.put("iv", Arrays.toString(iv));
+        values.put("value", byteArrayToHexString(passwordEncrypted));
+        values.put("key", byteArrayToHexString(key.getEncoded()));
+        values.put("iv", byteArrayToHexString(iv));
         
         return values;
     }
 
     @Override
     public HashMap<String, Object> decrypt(HashMap<String, Object> params) throws Exception {
-        SecretKeySpec key = (SecretKeySpec) params.get("key");
-        byte[] iv = getArrayFromString((String) params.get("iv"));
+        HashMap<String, Object> values = new HashMap<>();
         
-
-        // Inicializar cifrador
+        SecretKeySpec key = new SecretKeySpec(hexStringToByteArray((String) params.get("key")), "AES");
+        
+        byte[] iv = hexStringToByteArray((String) params.get("iv"));
+        
         cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
-            
-        return null;
+        
+        byte[] passwordDescrypted = cipher.doFinal(hexStringToByteArray((String) params.get("value")));
+        
+        String password = new String(passwordDescrypted, StandardCharsets.UTF_8);
+        
+        values.put("value", password);
+        values.put("key", byteArrayToHexString(key.getEncoded()));
+        values.put("iv", byteArrayToHexString(iv));
+        
+        return values;
     }
-    
-    public byte[] getArrayFromString(String string) {
-        String newString = string.replace("[", "").replace("]", "");
-        String[] arrayString = newString.split(", ");
-        byte[] array = null;
-        for(int i = 0; i < arrayString.length; i++) {
-            array[i] = Byte.parseByte(arrayString[i]);
-        }
-        return array;
-    }
-    
     
     public static byte[] generateIV() {
         SecureRandom random = new SecureRandom();
         byte[] iv = new byte[16];
         random.nextBytes(iv);
-        return Hex.encode(iv);
+        return iv;
     }
     
     // Gerar chave secreta utilizando PBKDF2
-    public static SecretKey generateSecretKey(String fromValue) throws NoSuchAlgorithmException {
+    public static SecretKeySpec generateSecretKey(String fromValue) throws NoSuchAlgorithmException {
         Integer iterations = fromValue.length() * 1000;
         return PBKDF2Util.generateDerivedKey(fromValue, iterations);
     }
     
-    private static byte[] padData(byte[] input) {
-        int blockSize = 16;
-        int padding = blockSize - (input.length % blockSize);
-        byte[] paddedData = new byte[input.length + padding];
-        System.arraycopy(input, 0, paddedData, 0, input.length);
-        
-        for (int i = input.length; i < paddedData.length; i++) {
-            paddedData[i] = (byte) padding;
+    public static String byteArrayToHexString(byte[] bytes) {
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : bytes) {
+            hexString.append(String.format("%02x", b));
         }
-        
-        return paddedData;
+        return hexString.toString();
     }
-    
-    private static byte[] unpadData(byte[] input) {
-        int padding = input[input.length - 1];
-        return Arrays.copyOfRange(input, 0, input.length - padding);
+
+    public static byte[] hexStringToByteArray(String hexString) {
+        int len = hexString.length();
+        byte[] valor = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            valor[i / 2] = (byte) ((Character.digit(hexString.charAt(i), 16) << 4)
+                    + Character.digit(hexString.charAt(i + 1), 16));
+        }
+        return valor;
     }
     
     public static void main(String[] args) throws Exception {
         
         //1- Pegar a senha fornecida pelo usuário
-        Scanner sc = new Scanner(System.in);
-        String password = sc.nextLine();
-        System.out.println(password);
+        //Scanner sc = new Scanner(System.in);
+        String password = "matheus";
+        System.out.println("Senha: " + password);
         
         //2- Derivar uma chave secreta com PBKDF2 utilizando a senha do usuário
-        SecretKeySpec key = new SecretKeySpec(generateSecretKey(password).getEncoded(), "AES");
-        System.out.println("Secret Key: " + Arrays.toString(key.getEncoded()));
-        System.out.println("Secret Key string: " + Hex.toHexString(key.getEncoded()));
-        System.out.println("Secret Key retornado da string: " + Arrays.toString(Hex.decode(Hex.toHexString(key.getEncoded()))));
-
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("value", password);
+        AESCBC cifrador = AESCBC.getInstance();
+        HashMap<String, Object> retorno = cifrador.encrypt(params);
+        System.out.println("Secret Key: " + retorno.get("key"));
+        System.out.println("IV: " + retorno.get("iv"));
+        System.out.println("Senha criptografada: " + retorno.get("value"));
         
-        
-        //3- Gerar um IV aleatório
-        byte[] iv = Hex.decode(generateIV());
-        System.out.println("IV: " + Arrays.toString(iv));
-        System.out.println("IV string: " + Hex.toHexString(iv));
-        System.out.println("IV retornado da string: " + Arrays.toString(Hex.decode(Hex.toHexString(iv))));
-        
-        
-        //4- Criptografar senha
-        
-        // Criptografar
-        cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));        
-        byte[] paddedInput = padData(password.getBytes());
-        byte[] encrypted = cipher.doFinal(paddedInput);
-        System.out.println("Criptografado: " + Hex.toHexString(encrypted));
-        
-        
-        //Descriptografar
-        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(iv));
-        byte[] decrypted = cipher.doFinal(encrypted);
-        byte[] unpaddedOutput = unpadData(decrypted);
-        System.out.println("Descriptografado: " + Hex.toHexString(unpaddedOutput));
+        HashMap<String, Object> data = cifrador.decrypt(retorno);
+        System.out.println("-----");
+        System.out.println("Secret Key: " + data.get("key"));
+        System.out.println("IV: " + data.get("iv"));
+        System.out.println("Senha descriptografada: " + data.get("value"));
         
         //4- Guardar em um arquivo cifrado com AES EBC a chave secreta e o IV
         

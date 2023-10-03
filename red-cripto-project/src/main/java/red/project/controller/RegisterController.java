@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import red.project.algorithms.AESCBC;
 import red.project.algorithms.Algorithm;
 import red.project.algorithms.MD5;
 import red.project.algorithms.SHA256;
@@ -24,12 +25,17 @@ import red.project.view.RegisterForm;
  */
 public final class RegisterController extends BaseController {
     
-    private static final List<Algorithm> modes = new ArrayList<>();
+    private static final List<Algorithm> modesUsername = new ArrayList<>();
+    private static final List<Algorithm> modesPassword = new ArrayList<>();
     private RegisterForm form;
 
     static {
-        modes.add(MD5.getInstance());
-        modes.add(SHA256.getInstance());
+        modesUsername.add(MD5.getInstance());
+        modesUsername.add(SHA256.getInstance());
+        
+        modesPassword.add(MD5.getInstance());
+        modesPassword.add(SHA256.getInstance());
+        modesPassword.add(AESCBC.getInstance());
     }
     
     public RegisterController() {
@@ -42,32 +48,25 @@ public final class RegisterController extends BaseController {
     public User registerUser() {
         
         if(validateFields()) {
-            UserEncryptMode encryptMode = getSelectedUserEncyptMode();
-            User user = new User(getUsernameInput(), getPasswordInput());
-
             try {
-                UserDao dao = DaoBuilder.build(encryptMode);
-                User encryptedUser = encryptMode.encryptUser(user);
+                UserEncryptMode encryptMode = getSelectedUserEncyptMode();
+                User user = new User(getUsernameInput(), getPasswordInput());
+                encryptMode.encryptUser(user);
 
-                HashMap<String,Object> values = new HashMap<>();
-                values.put("user", encryptedUser);
-                
-                dao.saveUserToFile(values);
-                
-                clearInputs();
-                return user;    
-            } catch (Exception ex) {
+                clearInputs();  
+
+                returnLoginForm();
+
+                return user; 
+            }
+            catch (Exception ex) {
                 showMessage(ex.getMessage(), "Erro");
             }
-            
-            returnLoginForm();
-            
-            return user;
         } else {
             showMessage("Preencha todos os campos!", "Erro");
             return null;
         }
-        
+        return null;
     }
     
     public LoginController returnLoginForm() {
@@ -83,7 +82,7 @@ public final class RegisterController extends BaseController {
         this.form.addCancelButtonClickAction((a) -> {
             returnLoginForm();
         });
-        this.form.setUserEncryptModes(modes);
+        this.form.setUserEncryptModes(modesUsername, modesPassword);
         
     }
 
@@ -118,10 +117,14 @@ public final class RegisterController extends BaseController {
         return !(getUsernameInput().isBlank() || getPasswordInput().isBlank());
     }
     
-    public UserEncryptMode getSelectedUserEncyptMode() {
+    public UserEncryptMode getSelectedUserEncyptMode() throws Exception {
+        UserEncryptMode uem = new UserEncryptMode();
+        uem.setUsernameEncryptMode(form.getUsernameEncModeSelectedItem());
+        uem.setPasswordEncryptMode(form.getPasswordEncModeSelectedItem());
         return UserEncryptMode.getInstance(
                 form.getUsernameEncModeSelectedItem(), 
-                form.getPasswordEncModeSelectedItem());
+                form.getPasswordEncModeSelectedItem(),
+                DaoBuilder.build(uem));
     }
     
     

@@ -25,35 +25,39 @@ public class UserDao_MD5_MD5 extends UserDao {
     }
     
     @Override
-    public String saveUserToFile(HashMap<String,Object> params) throws Exception {
+    public String saveUserToFile(HashMap<String,Object> paramsUsername, HashMap<String,Object> paramsPassword) throws Exception {
         String pathToSaveFile, arqName, fullFilePath;
-        pathToSaveFile = getPathToSaveFile();
         
-        User user = (User) params.get("user");
-        String[] key = {user.getUsername()+user.getPassword()};
-        arqName = (String) userEncryptMode.getUsernameEncryptMode().encrypt(key).get("value");
+        pathToSaveFile = getPathToSaveFile();
+        HashMap<String, Object> keyNameFile = new HashMap<>();
+        String nameFile = ((String) paramsUsername.get("value")) + ((String) paramsPassword.get("value"));
+        keyNameFile.put("value", nameFile);
+        arqName = (String) userEncryptMode.getUsernameEncryptMode().encrypt(keyNameFile).get("value");
         
         fullFilePath = pathToSaveFile + "/" + arqName + ".txt";
+        
+        
         
         if(!fileExists(fullFilePath)) {
             try(BufferedWriter bw = new BufferedWriter(new FileWriter(fullFilePath))) {
 
-                bw.write("Username: " + user.getUsername());
+                bw.write("Username: " + paramsUsername.get("value"));
                 bw.newLine();
-                bw.write("Password: " + user.getPassword());
+                bw.write("Password: " + paramsPassword.get("value"));
             }  
         }
         return null;
     }
 
     @Override
-    public User findFileByUser(HashMap<String,Object> params) throws Exception {
+    public User findFileByUser(HashMap<String,Object> paramsUsername, HashMap<String,Object> paramsPassword) throws Exception {
         String pathToSaveFile, arqName, fullFilePath;
         
         pathToSaveFile = getPathToSaveFile();
-        User user = (User) params.get("user");
-        String[] key = {user.getUsername()+user.getPassword()};
-        arqName = (String) userEncryptMode.getUsernameEncryptMode().encrypt(key).get("value");
+        HashMap<String, Object> keyNameFile = new HashMap<>();
+        String nameFile = ((String) paramsUsername.get("value")) + ((String) paramsPassword.get("value"));
+        keyNameFile.put("value", nameFile);
+        arqName = (String) userEncryptMode.getUsernameEncryptMode().encrypt(keyNameFile).get("value");
         
         fullFilePath = pathToSaveFile + "/" + arqName + ".txt";
         
@@ -65,7 +69,8 @@ public class UserDao_MD5_MD5 extends UserDao {
                 userSearched.setPassword(bf.readLine().split(":")[1].trim());
                 return userSearched;
             }  
-        } 
+        }
+        
         return null;
     }
     

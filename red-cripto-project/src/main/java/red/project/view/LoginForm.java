@@ -65,10 +65,10 @@ public final class LoginForm extends BaseForm {
         lblCredentialCipher.addFocusListener(event);
     }
     
-    public void setUserEncryptModes(List<Algorithm> modes) {
-        DefaultComboBoxModel defaultUsernameComboBoxModel = new DefaultComboBoxModel(modes.toArray());
+    public void setUserEncryptModes(List<Algorithm> modesUsername, List<Algorithm> modesPassword) {
+        DefaultComboBoxModel defaultUsernameComboBoxModel = new DefaultComboBoxModel(modesUsername.toArray());
         cbUsernameEncMode.setModel(defaultUsernameComboBoxModel);
-        DefaultComboBoxModel defaultPasswordComboBoxModel = new DefaultComboBoxModel(modes.toArray());
+        DefaultComboBoxModel defaultPasswordComboBoxModel = new DefaultComboBoxModel(modesPassword.toArray());
         cbPasswordEncMode.setModel(defaultPasswordComboBoxModel);
     }
     

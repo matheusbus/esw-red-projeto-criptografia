@@ -18,6 +18,7 @@ public class ECBKeyGenExample
     public static void main(String[] args)
         throws Exception
     {
+        
         KeyGenerator keyGen = KeyGenerator.getInstance("AES", "BC");
 
         SecretKey key = keyGen.generateKey();
@@ -36,6 +37,17 @@ public class ECBKeyGenExample
 
         System.out.println("decrypted: " + Hex.toHexString(input));
 
-         cipher.init(Cipher.ENCRYPT_MODE, key);
+        byte[] teste = Hex.decode("a0a1a2a3a4a5a6a7a0a1a2a3a4a5a6a7");
+        System.out.println("input    : " + Hex.toHexString(teste));
+
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        System.out.println("encrypted: " + Hex.toHexString(cipher.doFinal(teste)));
+
+        cipher.init(Cipher.DECRYPT_MODE, key);
+
+        System.out.println("encrypted: " + Hex.toHexString(cipher.doFinal(teste)));
+
+        cipher.init(Cipher.DECRYPT_MODE, key);
+
     }
 }

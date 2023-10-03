@@ -9,6 +9,7 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Scanner;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 //import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
@@ -25,25 +26,26 @@ public class PBKDF2Util {
      * @param iterations
      * @return
      */
-    public static SecretKey generateDerivedKey(String password, Integer iterations) throws NoSuchAlgorithmException {
-        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), getSalt().getBytes(), iterations, 128);
+    public static SecretKeySpec generateDerivedKey(String password, Integer iterations) throws NoSuchAlgorithmException {
+        PBEKeySpec spec = new PBEKeySpec(password.toCharArray(), getSalt(), iterations, 128);
         SecretKeyFactory pbkdf2 = null;
         SecretKey sk = null;
         
         try {
             pbkdf2 = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
             sk = pbkdf2.generateSecret(spec);
+            return new SecretKeySpec(sk.getEncoded(), "AES");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return sk;
+        return null;
     }
 
-    public static String getSalt() throws NoSuchAlgorithmException {
+    public static byte[] getSalt() throws NoSuchAlgorithmException {
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
         byte[] salt = new byte[16];
         sr.nextBytes(salt);
-        return Hex.toHexString(salt);
+        return salt;
     }
 
     public static void main(String args[]) throws NoSuchAlgorithmException {
@@ -59,8 +61,8 @@ public class PBKDF2Util {
         String chaveDerivada = Arrays.toString(generateDerivedKey(senha, it).getEncoded());
         String chaveDerivada2 = Arrays.toString(generateDerivedKey(senha, it).getEncoded());
 
-        System.out.println("Chave derivada da senha = " + chaveDerivada );
-        System.out.println("Chave derivada da senha = " + chaveDerivada2 );
+        System.out.println("Chave derivada da senha = " + Hex.toHexString(chaveDerivada.getBytes()));
+        System.out.println("Chave derivada da senha = " + Hex.toHexString(chaveDerivada2.getBytes()));
 
 
     }
