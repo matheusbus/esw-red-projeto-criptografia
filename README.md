@@ -38,10 +38,10 @@ Implementação de um gerenciador de senhas de usuários de um sistema. As crede
 
 ---
 
-![Untitled](login.png)
+![Untitled](register.png)
 
 ### 4.2. Interface de Login de Usuário
 
 ---
 
-![Untitled](register.png)
+![Untitled](login.png)
