@@ -19,7 +19,7 @@ Implementação de um gerenciador de senhas de usuários de um sistema. As crede
 - [ ]  O sistema deve armazenar no mesmo arquivo do nome de usuário, a senha criptografada com AES-CBC. Assim, o arquivo não terá nenhum valor em claro.
 - [ ]  IV (Nonce) e chave não podem estarem fixas e nem escritas dentro do código. O IV e a chave devem ficar em outro arquivo cifrado com AES-ECB.
 
-## 3. Tecnologias utilizadas
+# 3. Tecnologias utilizadas
 
 ---
 
@@ -30,17 +30,17 @@ Implementação de um gerenciador de senhas de usuários de um sistema. As crede
 - Java Swing para interfaces de usuário;
 - Biblioteca FlatLaf com belos visuais para Java Swing (disponível em: [https://central.sonatype.com/artifact/com.formdev/flatlaf?smo=true](https://central.sonatype.com/artifact/com.formdev/flatlaf?smo=true));
 
-## 4. Interfaces de usuário
+# 4. Interfaces de usuário
 
 ---
 
-### 4.1. Interface de Registro de Novo Usuário
+## 4.1. Interface de Registro de Novo Usuário
 
 ---
 
 ![Untitled](register.png)
 
-### 4.2. Interface de Login de Usuário
+## 4.2. Interface de Login de Usuário
 
 ---
 
